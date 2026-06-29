@@ -49,6 +49,45 @@ def knapsack(cursos, limiteHoras):
         "totalHoras": totalHoras,
     }
 
+
+def lis(cursos):
+    if not cursos:
+        return {"trilha": [], "indices": [], "tamanho": 0}
+
+    n = len(cursos)
+    niveis = [c["nivel"] for c in cursos]
+
+    # dp[i] = tamanho da LIS terminando no índice i
+    dp = [1] * n
+    # anterior[i] = índice do elemento anterior na LIS que termina em i
+    anterior = [-1] * n
+
+    for i in range(1, n):
+        for j in range(i):
+            if niveis[j] < niveis[i] and dp[j] + 1 > dp[i]:
+                dp[i] = dp[j] + 1
+                anterior[i] = j
+
+    # Encontra o índice com o maior dp
+    indiceMaior = max(range(n), key=lambda i: dp[i])
+    tamanho = dp[indiceMaior]
+
+    # Reconstrói a subsequência
+    indicesTrilha = []
+    idx = indiceMaior
+    while idx != -1:
+        indicesTrilha.append(idx)
+        idx = anterior[idx]
+
+    indicesTrilha.reverse()
+    trilha = [cursos[i] for i in indicesTrilha]
+
+    return {
+        "trilha": trilha,
+        "indices": indicesTrilha,
+        "tamanho": tamanho,
+    }
+
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -69,12 +108,19 @@ def recomendar():
     # Etapa 1: Knapsack — seleciona melhores cursos dentro do limite
     resultadoKnapsack = knapsack(cursos, limiteHoras)
 
+    # Etapa 2: LIS — organiza os selecionados em trilha crescente de nível
+    resultadoLis = lis(resultadoKnapsack["selecionados"])
+
     return jsonify({
         "knapsack": {
             "selecionados": resultadoKnapsack["selecionados"],
             "descartados": resultadoKnapsack["descartados"],
             "totalGanho": resultadoKnapsack["totalGanho"],
             "totalHoras": resultadoKnapsack["totalHoras"],
+        },
+        "lis": {
+            "trilha": resultadoLis["trilha"],
+            "tamanho": resultadoLis["tamanho"],
         },
         "limiteHoras": limiteHoras,
     })
