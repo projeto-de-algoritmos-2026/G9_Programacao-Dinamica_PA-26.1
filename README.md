@@ -36,6 +36,10 @@ A aplicação utiliza dois algoritmos clássicos de Programação Dinâmica para
 
 ## Vídeo de Apresentação
 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/bO90wY4bwgw?si=8BFySmMvPeImDzs1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+[Link Alternativo](https://youtu.be/bO90wY4bwgw)
+
 ## Instalação
 
 ```bash
